@@ -2,10 +2,14 @@
 
 use strict;
 use warnings;
+use feature 'postderef';
+no warnings qw(experimental::postderef);
 
 use LWP::UserAgent ();
 use Getopt::Long;
 use Pod::Usage;
+use Try::Tiny;
+use JSON;
 
 use constant {
     UA_TIMEOUT => 20,
@@ -30,6 +34,19 @@ my $response = $ua->get( $url );
 
 die "Can't get $url -- ", $response->status_line
 unless $response->is_success;
+
+my $repos;
+
+try {
+    $repos = from_json $response->content;
+}
+catch {
+    die "Can't parse json string: $_";
+};
+
+foreach my $repo ( $repos->@* ) {
+    print "$repo->{name}\n";
+}
 
 __END__
 
