@@ -13,9 +13,12 @@ use JSON;
 
 use constant {
     UA_TIMEOUT => 20,
+	Offset=>12,
 };
 
 my $usr = '';
+my @Repos='';
+
 
 GetOptions(
     'user=s' => \$usr,
