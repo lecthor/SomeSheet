@@ -9,9 +9,12 @@ use Pod::Usage;
 
 use constant {
     UA_TIMEOUT => 20,
+	Offset=>12,
 };
 
 my $usr = '';
+my @Repos='';
+	
 
 GetOptions(
     'user=s' => \$usr,
@@ -31,6 +34,20 @@ my $response = $ua->get( $url );
 die "Can't get $url -- ", $response->status_line
 unless $response->is_success;
 
+my $UnparsedRepo=$response->content;
+my $i=0;
+while ($i<length($UnparsedRepo)-Offset){
+	my $ParsedRepo='';
+	if (substr ($UnparsedRepo,$i,10) eq 'full_name"'){
+		$i=$i+Offset;
+		while (substr($UnparsedRepo,$i,1) ne '"') {
+		$ParsedRepo=$ParsedRepo.substr($UnparsedRepo,$i++,1);
+		}
+	push (@Repos, $ParsedRepo);
+	}
+	++$i;
+}
+foreach $i (@Repos){printf "$i\n"};
 __END__
 
 =head1 NAME
