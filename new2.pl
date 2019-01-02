@@ -12,13 +12,10 @@ use Try::Tiny;
 use JSON;
 
 use constant {
-    UA_TIMEOUT => 20,
-	Offset=>12,
+    REQUEST_TIMEOUT => 20,
 };
 
 my $usr = '';
-my @Repos='';
-
 
 GetOptions(
     'user=s' => \$usr,
@@ -30,8 +27,7 @@ pod2usage(1) unless length($usr);
 my $url = "https://api.github.com/users/$usr/repos";
 my $ua  = LWP::UserAgent->new();
 
-$ua->timeout( UA_TIMEOUT );
-
+$ua->timeout( REQUEST_TIMEOUT );
 
 my $response = $ua->get( $url );
 
