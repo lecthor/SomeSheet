@@ -1,16 +1,32 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use LWP::UserAgent;
+use LWP::UserAgent ();
+use Getopt::Long;
+use Pod::Usage;
+
+use constant {
+    UA_TIMEOUT => 20,
+};
 my @arr;
 my $s;
 my $st;
 my $i;
 my $url;
 my $response;
-my $username="arthurnn";
 my $browser = LWP::UserAgent->new;
-$url="https://api.github.com/users/".$username."/repos";
+my $usr = '';
+
+GetOptions(
+    'user=s' => \$usr,
+)
+or pod2usage(1);
+
+pod2usage(1) unless length($usr);
+
+my $ua = LWP::UserAgent->new();
+$ua->timeout( UA_TIMEOUT );
+$url="https://api.github.com/users/".$usr."/repos";
 
 $response = $browser->get( $url );
 die "Can't get $url -- ", $response->status_line
@@ -29,3 +45,17 @@ while ($i<length($s)-13){
 	++$i;
 }
 foreach $i (@arr) {printf "$i\n"};
+
+__END__
+
+=head1 NAME
+
+github user stats scrapper
+
+=head1 SYNOPSIS
+
+screpper.pl [options]
+
+Options:
+    --user github_user
+=cut
