@@ -28,3 +28,4 @@ while ($i<length($s)-13){
 	}
 	++$i;
 }
+foreach $i (@arr) {printf "$i\n"};
